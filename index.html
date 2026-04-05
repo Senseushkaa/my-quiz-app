@@ -3,169 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Quiz Master Ultimate</title>
+    <title>Quiz Master Elite</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        /* Цветовая палитра: Темный Неон */
         :root {
-            --accent: #00d2ff;
-            --bg: #0f0c29;
-            --glass: rgba(255, 255, 255, 0.07);
-            --border: rgba(255, 255, 255, 0.1);
+            --bg: #0b0e14;
+            --card: #1a1f26;
+            --accent: #00f2ff;
+            --text: #ffffff;
+            --gray: #8a8f98;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
             margin: 0;
             padding: 0;
             display: flex;
             flex-direction: column;
             height: 100vh;
-            overflow: hidden;
         }
 
-        /* Header */
-        .header {
-            padding: 15px;
-            text-align: center;
-            background: linear-gradient(to bottom, rgba(0,210,255,0.15), transparent);
-            border-bottom: 1px solid var(--border);
-        }
-        .header h1 { margin: 0; font-size: 20px; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; }
-
-        /* Navigation */
-        .tabs {
+        /* Навигация сверху */
+        .nav {
             display: flex;
-            background: rgba(0,0,0,0.4);
-            padding: 5px;
-            margin: 10px 15px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-        }
-        .tab {
-            flex: 1;
             padding: 10px;
-            text-align: center;
-            font-size: 12px;
-            border-radius: 8px;
-            transition: 0.3s;
-            cursor: pointer;
-            color: rgba(255,255,255,0.6);
+            gap: 10px;
+            background: var(--card);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
-        .tab.active { background: var(--accent); color: #000; font-weight: 700; }
 
-        /* Content Area */
+        .nav-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            background: transparent;
+            color: var(--gray);
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .nav-btn.active {
+            background: var(--accent);
+            color: #000;
+        }
+
+        /* Контентные блоки */
         .content {
             flex: 1;
             overflow-y: auto;
-            padding: 15px;
-            padding-bottom: 40px;
-        }
-        .view { display: none; }
-        .view.active { display: block; animation: fadeIn 0.3s ease; }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* Cards & UI */
-        .card {
-            background: var(--glass);
-            backdrop-filter: blur(15px);
-            border: 1px solid var(--border);
-            border-radius: 16px;
             padding: 20px;
-            margin-bottom: 15px;
         }
-        h3 { margin-top: 0; font-size: 18px; color: var(--accent); }
 
-        input, select {
+        .screen { display: none; }
+        .screen.active { display: block; }
+
+        .card {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        /* Поля ввода */
+        input {
             width: 100%;
             padding: 12px;
-            box-sizing: border-box;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid var(--border);
-            border-radius: 10px;
+            margin: 10px 0;
+            background: #252b33;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
             color: white;
-            margin-bottom: 12px;
-            font-size: 14px;
+            box-sizing: border-box;
         }
 
-        .btn {
+        .btn-main {
             width: 100%;
-            padding: 14px;
+            padding: 15px;
+            background: var(--accent);
             border: none;
             border-radius: 10px;
-            background: var(--accent);
-            color: #000;
-            font-weight: 700;
-            font-size: 14px;
+            font-weight: bold;
+            font-size: 16px;
             cursor: pointer;
-            transition: 0.2s;
+            margin-top: 10px;
         }
-        .btn:active { transform: scale(0.98); opacity: 0.9; }
-        .btn-outline { background: transparent; border: 1px solid var(--accent); color: var(--accent); margin-top: 10px; }
 
-        /* Constructor Styles */
-        .q-item {
-            background: rgba(255,255,255,0.03);
-            padding: 10px;
-            border-radius: 10px;
-            margin-bottom: 10px;
+        /* Стили конструктора */
+        .cat-block {
             border-left: 3px solid var(--accent);
+            padding-left: 15px;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
 
-    <div class="header"><h1>QUIZ MASTER</h1></div>
-
-    <div class="tabs" id="main-nav">
-        <div class="tab active" onclick="switchView('play', this)">ИГРАТЬ</div>
-        <div class="tab" onclick="switchView('create', this)">КОМНАТА</div>
-        <div class="tab" onclick="switchView('packs', this)">ПАКИ</div>
+    <div class="nav">
+        <button class="nav-btn active" onclick="showScreen('play', this)">ИГРАТЬ</button>
+        <button class="nav-btn" onclick="showScreen('create', this)">КОМНАТА</button>
+        <button class="nav-btn" onclick="showScreen('builder', this)">ПАКИ</button>
     </div>
 
     <div class="content">
-        <div id="view-play" class="view active">
+        <div id="screen-play" class="screen active">
             <div class="card">
-                <h3>Войти в игру</h3>
+                <h3>Вход в сессию</h3>
                 <input type="number" id="join-code" placeholder="Код комнаты (5 цифр)">
-                <button class="btn" onclick="sendJoin()">ПРИСОЕДИНИТЬСЯ</button>
+                <button class="btn-main" onclick="onJoin()">ВОЙТИ</button>
             </div>
         </div>
 
-        <div id="view-create" class="view">
+        <div id="screen-create" class="screen">
             <div class="card">
-                <h3>Создать комнату</h3>
-                <p style="font-size: 13px; opacity: 0.7;">Выберите пак из списка созданных вами:</p>
+                <h3>Запустить игру</h3>
+                <p>Выберите пак для этой комнаты:</p>
                 <div id="packs-list">
-                    <button class="btn btn-outline" onclick="tg.showAlert('Тут будет список паков из базы')">ОБНОВИТЬ СПИСОК</button>
+                    <p style="color:var(--gray)">Загрузка списка паков...</p>
                 </div>
             </div>
         </div>
 
-        <div id="view-packs" class="view">
-            <div id="pack-home">
-                <div class="card">
-                    <h3>Ваши паки</h3>
-                    <button class="btn" onclick="openConstructor()">➕ СОЗДАТЬ НОВЫЙ ПАК</button>
-                </div>
-            </div>
+        <div id="screen-builder" class="screen">
+            <div class="card">
+                <h3>Создание нового пака</h3>
+                <input type="text" id="pack-name-input" placeholder="Название пака">
+                
+                <div id="constructor-area"></div>
 
-            <div id="pack-editor" style="display:none;">
-                <div class="card">
-                    <h3 id="edit-title">Новый пак</h3>
-                    <input type="text" id="pack-name" placeholder="Название (например: Киноман)">
+                <button onclick="addCategory()" style="background:none; color:var(--accent); border:1px solid var(--accent); padding:10px; width:100%; border-radius:8px; cursor:pointer;">
+                    + Добавить категорию
+                </button>
 
-                    <div id="categories-container">
-                        </div>
-
-                    <button class="btn btn-outline" onclick="addCategory()">+ ДОБАВИТЬ КАТЕГОРИЮ</button>
-                    <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
-                    <button class="btn" onclick="saveFullPack()">💾 СОХРАНИТЬ ВЕСЬ ПАК</button>
-                    <button class="btn btn-outline" style="border-color: #ff4b2b; color: #ff4b2b;" onclick="closeConstructor()">ОТМЕНА</button>
-                </div>
+                <button class="btn-main" onclick="savePack()">💾 СОХРАНИТЬ ПАК</button>
             </div>
         </div>
     </div>
@@ -174,80 +149,59 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        let currentPack = { name: "", categories: [] };
+        let packData = { name: "", categories: [] };
 
-        function switchView(viewId, el) {
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.getElementById('view-' + viewId).classList.add('active');
-            if(el) el.classList.add('active');
-
-            // Если выходим из конструктора, сбрасываем его
-            if(viewId !== 'packs') closeConstructor();
+        function showScreen(id, btn) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('screen-' + id).classList.add('active');
+            btn.classList.add('active');
         }
 
-        // Логика Конструктора
-        function openConstructor() {
-            document.getElementById('pack-home').style.display = 'none';
-            document.getElementById('pack-editor').style.display = 'block';
-            document.getElementById('main-nav').style.display = 'none'; // Скрываем навигацию
-            currentPack = { name: "", categories: [] };
-            addCategory(); // Сразу одну категорию
-        }
-
-        function closeConstructor() {
-            document.getElementById('pack-home').style.display = 'block';
-            document.getElementById('pack-editor').style.display = 'none';
-            document.getElementById('main-nav').style.display = 'flex';
-        }
-
+        // Логика добавления данных в конструктор
         function addCategory() {
-            const catId = currentPack.categories.length;
-            currentPack.categories.push({ name: "", questions: [] });
-
-            const catHtml = `
-                <div class="card" style="background: rgba(255,255,255,0.02); padding: 15px; margin-top: 10px;" id="cat-${catId}">
-                    <input type="text" placeholder="Название категории" onchange="updateCatName(${catId}, this.value)">
-                    <div id="q-list-${catId}"></div>
-                    <button class="btn btn-outline" style="font-size: 11px; padding: 8px;" onclick="addQuestion(${catId})">+ Вопрос</button>
-                </div>
+            const catId = packData.categories.length;
+            packData.categories.push({ name: "", questions: [] });
+            
+            const div = document.createElement('div');
+            div.className = 'cat-block';
+            div.innerHTML = `
+                <input type="text" placeholder="Имя категории" oninput="packData.categories[${catId}].name = this.value">
+                <div id="q-container-${catId}"></div>
+                <button onclick="addQuestion(${catId})" style="font-size:12px; margin-bottom:10px;">+ Вопрос</button>
             `;
-            document.getElementById('categories-container').insertAdjacentHTML('beforeend', catHtml);
+            document.getElementById('constructor-area').appendChild(div);
         }
-
-        function updateCatName(id, val) { currentPack.categories[id].name = val; }
 
         function addQuestion(catId) {
-            const qId = currentPack.categories[catId].questions.length;
-            currentPack.categories[catId].questions.push({ text: "", pts: 100, ans: "" });
-
-            const qHtml = `
-                <div class="q-item" id="q-${catId}-${qId}">
-                    <input type="number" placeholder="Баллы" style="width: 80px;" onchange="currentPack.categories[${catId}].questions[${qId}].pts = this.value">
-                    <input type="text" placeholder="Вопрос" onchange="currentPack.categories[${catId}].questions[${qId}].text = this.value">
-                    <input type="text" placeholder="Ответ" style="margin-bottom:0;" onchange="currentPack.categories[${catId}].questions[${qId}].ans = this.value">
+            const qId = packData.categories[catId].questions.length;
+            packData.categories[catId].questions.push({ text: "", points: 100, answer: "" });
+            
+            const qDiv = document.createElement('div');
+            qDiv.innerHTML = `
+                <div style="display:flex; gap:5px;">
+                    <input type="number" placeholder="Баллы" style="width:70px" oninput="packData.categories[${catId}].questions[${qId}].points = this.value">
+                    <input type="text" placeholder="Вопрос" oninput="packData.categories[${catId}].questions[${qId}].text = this.value">
                 </div>
             `;
-            document.getElementById(`q-list-${catId}`).insertAdjacentHTML('beforeend', qHtml);
+            document.getElementById('q-container-' + catId).appendChild(qDiv);
         }
 
-        // Финальная отправка боту
-        function saveFullPack() {
-            currentPack.name = document.getElementById('pack-name').value;
-            if(!currentPack.name) return tg.showAlert("Введите название пака!");
-
-            tg.sendData(JSON.stringify({
-                action: "save_full_pack",
-                payload: currentPack
-            }));
-        }
-
-        function sendJoin() {
+        // КРИТИЧЕСКИЕ ФУНКЦИИ ОТПРАВКИ
+        function onJoin() {
             const code = document.getElementById('join-code').value;
-            if(!code) return;
+            if(!code) return tg.showAlert("Введите код!");
+            tg.sendData(JSON.stringify({ action: "join_room", code: code }));
+        }
+
+        function savePack() {
+            packData.name = document.getElementById('pack-name-input').value;
+            if(!packData.name) return tg.showAlert("Введите название пака!");
+            
+            // Отправляем весь объект боту
             tg.sendData(JSON.stringify({
-                action: "join",
-                room_code: code
+                action: "create_pack",
+                data: packData
             }));
         }
     </script>
