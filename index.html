@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Game App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: white;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        h1 { text-align: center; font-size: 24px; text-shadow: 0 0 10px #00d2ff; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid #00d2ff;
+            border-radius: 12px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        .card:active { transform: scale(0.9); background: #00d2ff; color: #000; }
+        .card.played { opacity: 0.3; border-color: gray; cursor: default; }
+        .score-board {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+            color: #00d2ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>QUIZ MASTER</h1>
+        <div id="room-info" class="score-board">Загрузка комнаты...</div>
+        <div id="quiz-grid" class="grid">
+            </div>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // Развернуть на весь экран
+
+        // Функция отправки данных боту
+        function pickQuestion(c_idx, pts) {
+            const data = {
+                action: "pick_question",
+                category: c_idx,
+                points: pts
+            };
+            tg.sendData(JSON.stringify(data)); // Отправляет данные боту и закрывает окно
+        }
+
+        // В реальном приложении тут был бы запрос к API
+        // Для теста просто отрисуем заглушку
+        const grid = document.getElementById('quiz-grid');
+        for(let i=0; i<9; i++) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerText = (i + 1) * 100;
+            card.onclick = () => pickQuestion(0, (i + 1) * 100);
+            grid.appendChild(card);
+        }
+    </script>
+</body>
+</html>
